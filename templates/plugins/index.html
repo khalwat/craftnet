@@ -8,20 +8,20 @@
 					<h1>Craft 3 Plugins</h1>
 				</div>
 
-				<table class="table">
+				<table id="plugins-table" class="table" aria-rowcount="{{ plugins|length }}" aria-colcount="4">
 					<thead>
 						<tr>
-							<th></th>
-							<th>Plugin</th>
-							<th>Developer</th>
-							<th align="right">Price</th>
+							<th aria-colindex="1" data-sort-method="none" class="no-sort"></th>
+							<th aria-colindex="2" aria-sort="ascending">Plugin</th>
+							<th aria-colindex="3">Developer</th>
+							<th aria-colindex="4" align="right" data-sort-method="none" class="no-sort">Price</th>
 						</tr>
 					</thead>
 
 					<tbody>
 						{% for plugin in plugins %}
 							<tr>
-								<td>
+								<td aria-colindex="1">
 									{% if plugin.iconId %}
 										{% set icon = craft.assets({id: plugin.iconId, site: 'api'}).one() %}
 										<img src="{{ icon.getUrl() }}" class="plugin-icon" />
@@ -29,18 +29,18 @@
 										<img src="/craftidresources/dist/images/default-plugin.svg" class="plugin-icon">
 									{% endif %}
 								</td>
-								<td>
+								<td aria-colindex="2">
 									<strong><a href="{{ plugin.repository }}" target="_blank">{{ plugin.name }}</a></strong>
 									<p>{{ plugin.shortDescription }}</p>
 								</td>
-								<td>
+								<td aria-colindex="3">
 									{% if plugin.developer.developerUrl %}
 										<a href="{{ plugin.developer.developerUrl }}" target="_blank">{{ plugin.developer.developerName }}</a>
 									{% else %}
 										{{ plugin.developer.developerName }}
 									{% endif %}
 								</td>
-								<td align="right">
+								<td aria-colindex="4" align="right">
 									{% if plugin.price %}
 											{{ plugin.price|currency('USD') }}<br>
 											<span class="plugin-renewal-price">{{ plugin.renewalPrice|currency('USD') }}/year</span>
@@ -52,7 +52,14 @@
 						{% endfor %}
 					</tbody>
 				</table>
+				<div class="p-5 text-center plugin-count">
+					<span class="badge badge-secondary">{{ plugins|length }} Plugins</span>
+				</div>
+
 			</div>
 		</div>
 	</div>
+	{% js %}
+		new Tablesort(document.getElementById('plugins-table'));
+	{% endjs %}
 {% endblock %}
